@@ -1,0 +1,6 @@
+[submodule "js/BankersBox"]
+	path = js/BankersBox
+	url = git://github.com/jazzychad/BankersBox.git
+[submodule "css/bootstrap"]
+	path = css/bootstrap
+	url = git://github.com/twitter/bootstrap.git
