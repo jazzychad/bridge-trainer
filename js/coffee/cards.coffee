@@ -1,13 +1,16 @@
-sys = require('util')
+#sys = require('util')
 
-Array::remove = (e) -> @[t..t] = [] if (t = @indexOf(e)) > -1
+Array::remove = (e) ->
+  return @[t..t] = [] if (t = @indexOf(e)) > -1
+  true
 
-class Card
-  suits = ["Spades", "Diamonds", "Clubs", "Hearts"]
-  suitsShort = ["S", "D", "C", "H"]
-  ranks = ["Ace","2","3","4","5","6","7","8","9","10","Jack","Queen","King"]
-  ranksShort = ["A","2","3","4","5","6","7","8","9","T","J","Q","K"]
-  values = [14,2,3,4,5,6,7,8,9,10,11,12,13]
+class @Card
+  suits = ["Spades", "Hearts", "Diamonds", "Clubs"]
+  suitsShort = ["S", "H", "D", "C"]
+  ranks = ["2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace"].reverse()
+  ranksShort = ["2","3","4","5","6","7","8","9","T","J","Q","K","A"].reverse()
+  values = [2,3,4,5,6,7,8,9,10,11,12,13,14].reverse()
+  hcps = [0,0,0,0,0,0,0,0,0,1,2,3,4].reverse()
 
   constructor: (@id) ->
     @suit = suits[Math.floor(id / 13)]
@@ -15,6 +18,7 @@ class Card
     @rank = ranks[id % 13]
     @rankShort = ranksShort[id % 13]
     @value = values[id % 13]
+    @hcp = hcps[id % 13]
 
   cardName: ->
     "#{@rank} of #{@suit}"
@@ -23,15 +27,15 @@ class Card
     "#{@rankShort}#{@suitShort}"
 
   printName: ->
-    sys.puts @cardName()
+    @cardName() #sys.puts @cardName()
 
   printNameShort: ->
-    sys.puts @cardNameShort()
+    @cardNameShort() #sys.puts @cardNameShort()
 
   toString: ->
     "c" + @cardNameShort()
 
-class DeckUtil
+class @DeckUtil
   constructor: ->
 
   @printCards = (cards) ->
@@ -47,26 +51,26 @@ class DeckUtil
   @printDeck = (deck) ->
     @printCards deck.cards
 
-  @printHand = (hand) ->
-    @printCards hand
-
   @printDeckShort = (deck) ->
     @printCardsShort deck.cards
 
-  @printHandShort = (hand) ->
-    @printCardsShort hand
+  @printBridgeHand = (hand, sep="<br/>") ->
+    ret = ""
+    if hand.origSpades.length
+      ret += "<span class='spades'>&spades; </span>"
+      ret += hand.origSpades.slice().sort((c1,c2) -> c1.id - c2.id).map((c) -> c.rankShort).join(" ") + sep
+    if hand.origHearts.length
+      ret += "<span class='hearts'>&hearts; </span>"
+      ret += hand.origHearts.slice().sort((c1,c2) -> c1.id - c2.id).map((c) -> c.rankShort).join(" ") + sep
+    if hand.origDiamonds.length
+      ret += "<span class='diams'>&diams; </span>"
+      ret += hand.origDiamonds.slice().sort((c1,c2) -> c1.id - c2.id).map((c) -> c.rankShort).join(" ") + sep
+    if hand.origClubs.length
+      ret += "<span class='clubs'>&clubs; </span>"
+      ret += hand.origClubs.slice().sort((c1,c2) -> c1.id - c2.id).map((c) -> c.rankShort).join(" ") + sep
+    ret
 
-  shuffleDumb = (cards) ->
-    for x in [0..100]
-      j = Math.floor Math.random() * cards.length
-      k = Math.floor Math.random() * cards.length
-      [cards[j], cards[k]] = [cards[k], cards[j]]
-    cards
-
-  @shuffleCards: (cards) ->
-    shuffleDumb cards
-
-class Deck
+class @Deck
   constructor: ->
     @reset()
 
@@ -108,20 +112,83 @@ class Deck
     card = @cards.pop()
     @deal card
 
-class CardPlayer
+class @Hand
   constructor: ->
-    @hand = []
+    @cards = []
+    @spades = []
+    @hearts = []
+    @diamonds = []
+    @clubs = []
+    @origCards = []
+    @origSpades = []
+    @origHearts = []
+    @origDiamonds = []
+    @origClubs = []
+
+  addCard: (card) ->
+    @cards.push card
+    @origCards.push card
+    if card.suit == "Spades"
+      @spades.push card
+      @origSpades.push card
+    else if card.suit == "Hearts"
+      @hearts.push card
+      @origHearts.push card
+    else if card.suit == "Diamonds"
+      @diamonds.push card
+      @origDiamonds.push card
+    else if card.suit == "Clubs"
+      @clubs.push card
+      @origClubs.push card
+    true
+
+  numCards: ->
+    @cards.length
+
+  sort: ->
+    @cards.sort (c1, c2) ->
+      c1.id - c2.id
+
+  hcp: ->
+    @cards.reduce ((prev, cur) ->
+      prev + cur.hcp),
+      0
+
+  shape: ->
+    arr = []
+    arr.push @origSpades.length, @origHearts.length, @origDiamonds.length, @origClubs.length
+    arr.sort (a,b) -> b-a
+
+  shapeString: ->
+    @shape().join ","
+
+  isBalanced: ->
+    return true if @shapeString() == "4,3,3,3" or @shapeString() == "5,3,3,2" or @shapeString() == "4,4,3,2"
+    false
+
+  numVoids: ->
+    @shape().filter((c) -> c == 0).length
+
+  numSingletons: ->
+    @shape().filter((c) -> c == 1).length
+
+  numDoubletons: ->
+    @shape().filter((c) -> c == 2).length
+
+class @CardPlayer
+  constructor: ->
+    @hand = new Hand
     @partner = null
     @tricks = []
     @discards = []
 
   reset: ->
-    @hand = []
+    @hand = new Hand
     @tricks = []
     @discards = []
 
   addCard: (card) ->
-    @hand.push card
+    @hand.addCard card
 
   removeCard: (card) ->
     @hand.remove card
@@ -132,7 +199,7 @@ class CardPlayer
     else
       @discards.push cards
 
-class CardTable
+class @CardTable
   constructor: (@num_players=4) ->
     @deck = new Deck()
     @currentTrick = []
@@ -141,7 +208,7 @@ class CardTable
   reset: ->
     @players = for x in [1..@num_players]
       new CardPlayer()
-    @resetDeck
+    @resetDeck()
 
   resetDeck: ->
     @deck.reset()
@@ -150,3 +217,36 @@ class CardTable
     for x in [0...(@num_players * num)]
       @players[x % @num_players].addCard @deck.dealTop()
     true
+
+
+# Bidding stuff
+
+class @BasicOpeningBidStrategy
+  constructor: ->
+    @weak2BidsEnabled = false
+    @minimum1BidHCP = 12
+
+  openingBid: (hand) ->
+    if hand.hcp() < @minimum1BidHCP
+      if not @weak2BidsEnabled
+        return "Pass"
+      else
+        # TODO: handle weak 2 bids, for now pass
+        return "Pass"
+
+    if 15 <= hand.hcp() <= 17 && hand.isBalanced()
+      return "1NT"
+
+    if hand.hcp() >= 22
+      return "2C"
+
+    # TODO handle other 1 level bids
+    "Other"
+
+class @BasicBiddingStrategy
+  constructor: ->
+    @jacobyTransfers = false
+    @staymanConvention = false
+    @openingBidStrategy = new BasicOpeningBidStrategy()
+    @respondingBidStrategy = null;
+    @openingRebidStrategy = null;
