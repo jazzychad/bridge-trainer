@@ -23,7 +23,22 @@
         hcp = hand.hcp();
       }
       $("body").html(DeckUtil.printBridgeHand(hand))
-      $("body").append("<br/>" + hand.hcp() + " : " + strategy.openingBidStrategy.openingBid(hand));
+      $("body").append("<br/>" + hand.hcp() + " " + "HCP : " + strategy.openingBidStrategy.openingBid(hand));
+
+      /*
+      var count = 0;
+      for (var i = 0; i < 1000; i++) {
+        table = new CardTable();
+        table.deck.shuffle();
+        table.dealHand(13);
+        hand = table.players[0].hand;
+        var bid = strategy.openingBidStrategy.openingBid(hand);
+        if (bid === "1NT") {
+          count++;
+        }
+      }
+      console.log(count);
+      */
 
     </script>
   </body>
