@@ -1,7 +1,9 @@
 <html>
   <head>
     <title>Bridge Trainer</title>
+    <link href='http://fonts.googleapis.com/css?family=Gilda+Display|Croissant+One|Gafata|Merienda|Sanchez' rel='stylesheet' type='text/css'>
     <style>
+      body {font-size: 24px; font-family: 'Sanchez', cursive;}
       .spades {color: #000;}
       .hearts {color: #f00;}
       .diams {color: #f00;}
@@ -19,7 +21,7 @@
         var table = new CardTable();
         table.deck.shuffle();
         table.dealHand(13);
-        hand = table.players[0].hand;
+        hand = table.south.hand;
         hcp = hand.hcp();
       }
       $("body").html(DeckUtil.printBridgeHand(hand))

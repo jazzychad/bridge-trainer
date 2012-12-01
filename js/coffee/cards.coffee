@@ -208,6 +208,11 @@ class @CardTable
   reset: ->
     @players = for x in [1..@num_players]
       new CardPlayer()
+    if @num_players == 4
+      @south = @players[0]
+      @west = @players[1]
+      @north = @players[2]
+      @east = @players[3]
     @resetDeck()
 
   resetDeck: ->

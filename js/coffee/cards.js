@@ -355,6 +355,12 @@
         }
         return _results;
       }).call(this);
+      if (this.num_players === 4) {
+        this.south = this.players[0];
+        this.west = this.players[1];
+        this.north = this.players[2];
+        this.east = this.players[3];
+      }
       return this.resetDeck();
     };
 
