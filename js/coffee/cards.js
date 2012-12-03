@@ -399,7 +399,7 @@
       if ((15 <= (_ref = hand.hcp()) && _ref <= 17) && hand.isBalanced()) {
         return "1NT";
       }
-      if (hand.hcp() >= 22) {
+      if (hand.hcp() >= 21) {
         return "2C";
       }
       return "Other";

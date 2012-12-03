@@ -242,7 +242,7 @@ class @BasicOpeningBidStrategy
     if 15 <= hand.hcp() <= 17 && hand.isBalanced()
       return "1NT"
 
-    if hand.hcp() >= 22
+    if hand.hcp() >= 21
       return "2C"
 
     # TODO handle other 1 level bids
@@ -255,3 +255,4 @@ class @BasicBiddingStrategy
     @openingBidStrategy = new BasicOpeningBidStrategy()
     @respondingBidStrategy = null;
     @openingRebidStrategy = null;
+
