@@ -26,15 +26,7 @@ js/coffee/cards.js: js/coffee/cards.coffee
 ### Bootstrap dependencies
 ###
 
-bootstrap: css/bootstrap/bootstrap/js/bootstrap.min.js css/bootstrap/bootstrap/css/bootstrap.css css/bootstrap/bootstrap/css/bootstrap-responsive.css
-
-css/bootstrap/bootstrap/js/bootstrap.min.js: css/bootstrap/js/*.js
-	pushd css/bootstrap && make bootstrap && popd
-
-css/bootstrap/bootstrap/css/bootstrap.css: css/bootstrap/less/*.less
-	pushd css/bootstrap && make bootstrap && popd
-
-css/bootstrap/bootstrap/bootstrap-responsive.css: css/bootstrap/less/*.less
+bootstrap:
 	pushd css/bootstrap && make bootstrap && popd
 
 ###
