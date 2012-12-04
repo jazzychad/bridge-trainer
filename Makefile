@@ -5,9 +5,9 @@ site: all
 	mkdir -p _site/{css,js,img}
 	cp html/index.html _site
 	cp js/coffee/cards.js _site/js
-	cp css/bootstrap/docs/assets/img/{glyphicons-halflings.png,glyphicons-halflings-white.png} _site/img
-	cp css/bootstrap/docs/assets/js/bootstrap.min.js _site/js
-	cp css/bootstrap/docs/assets/css/{bootstrap.css,bootstrap-responsive.css} _site/css
+	cp css/bootstrap/bootstrap/img/{glyphicons-halflings.png,glyphicons-halflings-white.png} _site/img
+	cp css/bootstrap/bootstrap/js/bootstrap.min.js _site/js
+	cp css/bootstrap/bootstrap/css/{bootstrap.css,bootstrap-responsive.css,bootstrap.min.css,bootstrap-responsive.min.css} _site/css
 	cp js/Bankersbox/bankersbox.min.js _site/js
 
 clean:
@@ -26,16 +26,16 @@ js/coffee/cards.js: js/coffee/cards.coffee
 ### Bootstrap dependencies
 ###
 
-bootstrap: css/bootstrap/docs/assets/js/bootstrap.min.js css/bootstrap/docs/assets/css/bootstrap.css css/bootstrap/docs/assets/css/bootstrap-responsive.css
+bootstrap: css/bootstrap/bootstrap/js/bootstrap.min.js css/bootstrap/bootstrap/css/bootstrap.css css/bootstrap/bootstrap/css/bootstrap-responsive.css
 
-css/bootstrap/docs/assets/js/bootstrap.min.js: css/bootstrap/js/*.js
-	pushd css/bootstrap && make && popd
+css/bootstrap/bootstrap/js/bootstrap.min.js: css/bootstrap/js/*.js
+	pushd css/bootstrap && make bootstrap && popd
 
-css/bootstrap/docs/assets/css/bootstrap.css: css/bootstrap/less/*.less
-	pushd css/bootstrap && make && popd
+css/bootstrap/bootstrap/css/bootstrap.css: css/bootstrap/less/*.less
+	pushd css/bootstrap && make bootstrap && popd
 
-css/bootstrap/docs/assets/css/bootstrap-responsive.css: css/bootstrap/less/*.less
-	pushd css/bootstrap && make && popd
+css/bootstrap/bootstrap/bootstrap-responsive.css: css/bootstrap/less/*.less
+	pushd css/bootstrap && make bootstrap && popd
 
 ###
 ### Bankersbox dependencies
