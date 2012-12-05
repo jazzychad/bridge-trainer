@@ -1,51 +1,144 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Bridge Trainer</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='http://fonts.googleapis.com/css?family=Gilda+Display|Croissant+One|Gafata|Merienda|Sanchez' rel='stylesheet' type='text/css'>
+    <link href='./css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+    <link href='./css/bootstrap-responsive.min.css' rel='stylesheet' type='text/css'>
     <style>
-      body {font-size: 24px; font-family: 'Sanchez', cursive;}
-      .spades {color: #000;}
-      .hearts {color: #f00;}
-      .diams {color: #f00;}
-      .clubs {color: #000;}
+      html {height: 100%;}
+      body {font-size: 24px; font-family: 'Sanchez', cursive; height: 100%; padding-bottom:100px;}
+      .container {height: 100%;}
+      .big {font-size: 20px !important;}
+      .spades {color: #000 !important;}
+      .hearts {color: #f00 !important;}
+      .diams {color: #f00 !important;}
+      .clubs {color: #000 !important;}
+      #hand {line-height: 30px;}
     </style>
   </head>
   <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="js/bankersbox.min.js" type="text/javascript"></script>
     <script src="js/cards.js" type="text/javascript"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script language="javascript">
-      function doit() {
-        var table, hcp = 0, hand;
-        var strategy = new BasicBiddingStrategy();
-        // find a biddable hand (no weak 2 bids)
-        while (hcp < 1) {
-          var table = new CardTable();
-          table.deck.shuffle();
-          table.dealHand(13);
-          hand = table.south.hand;
-          hcp = hand.hcp();
-        }
-        $("body").html(DeckUtil.printBridgeHand(hand))
-        $("body").append("<br/>" + hand.hcp() + " " + "HCP : " + strategy.openingBidStrategy.openingBid(hand));
-      }
-      doit();
-      /*
-      var count = 0;
-      for (var i = 0; i < 1000; i++) {
-        table = new CardTable();
-        table.deck.shuffle();
-        table.dealHand(13);
-        hand = table.players[0].hand;
-        var bid = strategy.openingBidStrategy.openingBid(hand);
-        if (bid === "1NT") {
-          count++;
-        }
-      }
-      console.log(count);
-      */
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="./js/app.js" type="text/javascript"></script>
 
-    </script>
+    <div class="container">
+      <div class="row">
+        <div class="span3 offset4" id="hand"></div>
+      </div>
+      <div class="row">
+        <div class="span6 offset4">
+          <!--
+          <div class="btn-group" data-toggle="buttons-radio">
+            <button type="button" class="btn big">1 NT</button>
+            <button type="button" class="btn big">2 NT</button>
+            <button type="button" class="btn big">3 NT</button>
+            <button type="button" class="btn big">4 NT</button>
+            <button type="button" class="btn big">5 NT</button>
+            <button type="button" class="btn big">6 NT</button>
+            <button type="button" class="btn big">7 NT</button>
+          </div>
+          <div class="clear"></div>
+          -->
+          <!--
+          <div class="btn-group" data-toggle="buttons-radio">
+            <button type="button" class="btn big">1</button>
+            <button type="button" class="btn big">2</button>
+            <button type="button" class="btn big">3</button>
+            <button type="button" class="btn big">4</button>
+            <button type="button" class="btn big">5</button>
+            <button type="button" class="btn big">6</button>
+            <button type="button" class="btn big">7</button>
+          </div>
+          <div class="clear"></div>
+          <div class="btn-group" data-toggle="buttons-radio">
+            <button type="button" class="btn big">NT</button>
+            <button type="button" class="btn big">&spades;</button>
+            <button type="button" class="btn big hearts">&hearts;</button>
+            <button type="button" class="btn big diams">&diams;</button>
+            <button type="button" class="btn big">&clubs;</button>
+          </div>
+          <div class="clear"></div>
+          <div class="btn-group">
+            <button type="button" class="btn big">Pass</button>
+          </div>
+          <div class="clear"></div>
+          -->
+
+
+          <button type="button" data-bid="PASS" class="btn bid-btn big">Pass</button>
+          <!--<button type="button" class="btn big" id="again">Again</button>-->
+          <div class="clear"></div>
+          <div class="btn-group" data-toggle="x-buttons-radio">
+            <button type="button" data-bid="1C" class="btn bid-btn big">1 &clubs;</button>
+            <button type="button" data-bid="1D" class="btn bid-btn big diams">1 &diams;</button>
+            <button type="button" data-bid="1H" class="btn bid-btn big hearts">1 &hearts;</button>
+            <button type="button" data-bid="1S" class="btn bid-btn big">1 &spades;</button>
+            <button type="button" data-bid="1NT" class="btn bid-btn big">1 NT</button>
+          </div>
+          <div class="clear"></div>
+          <div class="btn-group" data-toggle="x-buttons-radio">
+            <button type="button" data-bid="2C" class="btn bid-btn big">2 &clubs;</button>
+            <button type="button" data-bid="2D" class="btn bid-btn big diams">2 &diams;</button>
+            <button type="button" data-bid="2H" class="btn bid-btn big hearts">2 &hearts;</button>
+            <button type="button" data-bid="2S" class="btn bid-btn big">2 &spades;</button>
+            <button type="button" data-bid="2NT" class="btn bid-btn big">2 NT</button>
+          </div>
+          <div class="clear"></div>
+          <div class="btn-group" data-toggle="x-buttons-radio">
+            <button type="button" data-bid="3C" class="btn bid-btn big">3 &clubs;</button>
+            <button type="button" data-bid="3D" class="btn bid-btn big diams">3 &diams;</button>
+            <button type="button" data-bid="3H" class="btn bid-btn big hearts">3 &hearts;</button>
+            <button type="button" data-bid="3S" class="btn bid-btn big">3 &spades;</button>
+            <button type="button" data-bid="3NT" class="btn bid-btn big">3 NT</button>
+          </div>
+          <div class="clear"></div>
+          <div class="btn-group" data-toggle="x-buttons-radio">
+            <button type="button" data-bid="4C" class="btn bid-btn big">4 &clubs;</button>
+            <button type="button" data-bid="4D" class="btn bid-btn big diams">4 &diams;</button>
+            <button type="button" data-bid="4H" class="btn bid-btn big hearts">4 &hearts;</button>
+            <button type="button" data-bid="4S" class="btn bid-btn big">4 &spades;</button>
+            <button type="button" data-bid="4NT" class="btn bid-btn big">4 NT</button>
+          </div>
+          <div class="clear"></div>
+          <div class="btn-group" data-toggle="x-buttons-radio">
+            <button type="button" data-bid="5C" class="btn bid-btn big">5 &clubs;</button>
+            <button type="button" data-bid="5D" class="btn bid-btn big diams">5 &diams;</button>
+            <button type="button" data-bid="5H" class="btn bid-btn big hearts">5 &hearts;</button>
+            <button type="button" data-bid="5S" class="btn bid-btn big">5 &spades;</button>
+            <button type="button" data-bid="5NT" class="btn bid-btn big">5 NT</button>
+          </div>
+          <div class="clear"></div>
+          <div class="btn-group" data-toggle="x-buttons-radio">
+            <button type="button" data-bid="6C" class="btn bid-btn big">6 &clubs;</button>
+            <button type="button" data-bid="6D" class="btn bid-btn big diams">6 &diams;</button>
+            <button type="button" data-bid="6H" class="btn bid-btn big hearts">6 &hearts;</button>
+            <button type="button" data-bid="6S" class="btn bid-btn big">6 &spades;</button>
+            <button type="button" data-bid="6NT" class="btn bid-btn big">6 NT</button>
+          </div>
+          <div class="clear"></div>
+          <div class="btn-group" data-toggle="x-buttons-radio">
+            <button type="button" data-bid="7C" class="btn bid-btn big">7 &clubs;</button>
+            <button type="button" data-bid="7D" class="btn bid-btn big diams">7 &diams;</button>
+            <button type="button" data-bid="7H" class="btn bid-btn big hearts">7 &hearts;</button>
+            <button type="button" data-bid="7S" class="btn bid-btn big">7 &spades;</button>
+            <button type="button" data-bid="7NT" class="btn bid-btn big">7 NT</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
   </body>
 </html>
 

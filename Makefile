@@ -1,10 +1,13 @@
-all: bootstrap bankersbox cards
+all: bootstrap bankersbox cards appjs
 
-site: all
+site: all cardsmin appjsmin
 	rm -rf _site
 	mkdir -p _site/{css,js,img}
 	cp html/index.html _site
 	cp js/coffee/cards.js _site/js
+	cp js/coffee/cards.min.js _site/js
+	cp js/coffee/app.js _site/js
+	cp js/coffee/app.min.js _site/js
 	cp css/bootstrap/bootstrap/img/{glyphicons-halflings.png,glyphicons-halflings-white.png} _site/img
 	cp css/bootstrap/bootstrap/js/bootstrap.min.js _site/js
 	cp css/bootstrap/bootstrap/css/{bootstrap.css,bootstrap-responsive.css,bootstrap.min.css,bootstrap-responsive.min.css} _site/css
@@ -24,6 +27,25 @@ cards: js/coffee/cards.js
 
 js/coffee/cards.js: js/coffee/cards.coffee
 	coffee -c js/coffee/cards.coffee
+
+cardsmin: js/coffee/cards.min.js
+
+js/coffee/cards.min.js: js/coffee/cards.js
+	@echo "Minifying cards.js..."
+	curl -d output_format=text -d output_info=compiled_code -d compilation_level=SIMPLE_OPTIMIZATIONS --data-urlencode js_code@js/coffee/cards.js http://closure-compiler.appspot.com/compile > js/coffee/cards.min.js 2> /dev/null
+	@echo "Done."
+
+appjs: js/coffee/app.js
+
+js/coffee/app.js: js/coffee/app.coffee
+	coffee -c js/coffee/app.coffee
+
+appjsmin: js/coffee/app.min.js
+
+js/coffee/app.min.js: js/coffee/app.js
+	@echo "Minifying app.js"
+	curl -d output_format=text -d output_info=compiled_code -d compilation_level=SIMPLE_OPTIMIZATIONS --data-urlencode js_code@js/coffee/app.js http://closure-compiler.appspot.com/compile > js/coffee/app.min.js 2> /dev/null
+	@echo "Done."
 
 ###
 ### Bootstrap dependencies
@@ -47,4 +69,4 @@ deploy: site
 	pushd _site && s3cmd sync . ${BRIDGE_S3_BUCKET} && popd
 
 
-.PHONY: all clean deploy bootstrap bankersbox cards site
+.PHONY: all clean deploy bootstrap bankersbox cards cardsmin site

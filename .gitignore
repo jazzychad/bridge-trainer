@@ -1,3 +1,7 @@
 *.*~
 *~
 _site
+*.min.js
+app.js
+cards.js
+
