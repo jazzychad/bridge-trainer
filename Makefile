@@ -12,6 +12,9 @@ site: all
 
 clean:
 	rm -rf _site
+	rm -f js/coffee/cards.js
+	pushd css/bootstrap && make clean && popd
+	pushd js/BankersBox && make clean && popd
 
 ###
 ### Cards dependencies
@@ -33,10 +36,8 @@ bootstrap:
 ### Bankersbox dependencies
 ###
 
-bankersbox: js/Bankersbox/bankersbox.min.js
-
-js/Bankersbox/bankersbox.min.js: js/Bankersbox/bankersbox.js
-	pushd js/Bankersbox && make && popd
+bankersbox:
+	pushd js/BankersBox && make min && popd
 
 ###
 ### Deploy
