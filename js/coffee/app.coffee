@@ -5,6 +5,10 @@ $ = @$
 bb = new @BankersBox(1)
 tappable = @tappable
 
+_log = (msg) ->
+  if @console && @console.log
+    @console.log(msg)
+
 doit = ->
   hcp = 0
   table = new @CardTable()
@@ -17,18 +21,19 @@ doit = ->
 
 $(document).ready ->
   doit()
+  tappable "#skip", -> doit()
   tappable ".bid-btn", (e, target) ->
     openingBids = biddingStrategy.openingBidStrategy.openingBid(hand)
     bid = $(target).attr('data-bid')
     if bid in (openingBids.map (v) -> return v.bid)
-      console.log('correct')
+      _log 'correct'
       $("#alert").addClass('alert-success').text('Correct')
       updateStats true
     else
-      console.log('incorrect')
+      _log 'incorrect'
       $("#alert").removeClass('alert-success').text('Wrong')
       updateStats false
-    console.log('tap ' + $(target).attr('data-bid'))
+    _log 'tap ' + $(target).attr('data-bid')
     doit()
 
 updateStats = (correct) ->
