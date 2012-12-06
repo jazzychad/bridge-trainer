@@ -16,8 +16,7 @@ site: all cardsmin appjsmin
 
 clean:
 	rm -rf _site
-	rm -f js/coffee/cards.js
-	rm -f js/coffee/app.js
+	rm -f js/coffee/*.js
 	pushd css/bootstrap && make clean && popd
 	pushd js/BankersBox && make clean && popd
 
