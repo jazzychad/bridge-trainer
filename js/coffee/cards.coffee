@@ -234,10 +234,10 @@ class @BasicOpeningBidStrategy
   openingBid: (hand) ->
     if hand.hcp() < @minimum1BidHCP
       if not @weak2BidsEnabled
-        return [new Bid("Pass")]
+        return [new Bid("PASS")]
       else
         # TODO: handle weak 2 bids, for now pass
-        return [new Bid("Pass")]
+        return [new Bid("PASS")]
 
     if 15 <= hand.hcp() <= 17 && hand.isBalanced()
       return [new Bid("1NT")]
@@ -246,7 +246,7 @@ class @BasicOpeningBidStrategy
       return [new Bid("2C")]
 
     # TODO handle other 1 level bids
-    [new Bid("Other")]
+    [new Bid("PASS")]
 
 class @BasicBiddingStrategy
   constructor: ->

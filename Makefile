@@ -12,6 +12,7 @@ site: all cardsmin appjsmin
 	cp css/bootstrap/bootstrap/js/bootstrap.min.js _site/js
 	cp css/bootstrap/bootstrap/css/{bootstrap.css,bootstrap-responsive.css,bootstrap.min.css,bootstrap-responsive.min.css} _site/css
 	cp js/Bankersbox/bankersbox.min.js _site/js
+	cp js/tappable/source/tappable.js _site/js
 
 clean:
 	rm -rf _site

@@ -4,3 +4,6 @@
 [submodule "css/bootstrap"]
 	path = css/bootstrap
 	url = git://github.com/jazzychad/bootstrap.git
+[submodule "js/tappable"]
+	path = js/tappable
+	url = git://github.com/cheeaun/tappable.git
