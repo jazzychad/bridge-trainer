@@ -22,9 +22,11 @@ $(document).ready ->
     bid = $(target).attr('data-bid')
     if bid in (openingBids.map (v) -> return v.bid)
       console.log('correct')
+      $("#alert").addClass('alert-success').text('Correct')
       updateStats true
     else
       console.log('incorrect')
+      $("#alert").removeClass('alert-success').text('Wrong')
       updateStats false
     console.log('tap ' + $(target).attr('data-bid'))
     doit()
