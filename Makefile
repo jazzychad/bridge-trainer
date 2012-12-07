@@ -33,7 +33,8 @@ cardsmin: js/coffee/cards.min.js
 
 js/coffee/cards.min.js: js/coffee/cards.js
 	@echo "Minifying cards.js..."
-	curl -d output_format=text -d output_info=compiled_code -d compilation_level=SIMPLE_OPTIMIZATIONS --data-urlencode js_code@js/coffee/cards.js http://closure-compiler.appspot.com/compile > js/coffee/cards.min.js 2> /dev/null
+	#curl -d output_format=text -d output_info=compiled_code -d compilation_level=SIMPLE_OPTIMIZATIONS --data-urlencode js_code@js/coffee/cards.js http://closure-compiler.appspot.com/compile > js/coffee/cards.min.js 2> /dev/null
+	java -jar compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js js/coffee/cards.js > js/coffee/cards.min.js
 	@echo "Done."
 
 appjs: js/coffee/app.js
@@ -45,7 +46,8 @@ appjsmin: js/coffee/app.min.js
 
 js/coffee/app.min.js: js/coffee/app.js
 	@echo "Minifying app.js"
-	curl -d output_format=text -d output_info=compiled_code -d compilation_level=SIMPLE_OPTIMIZATIONS --data-urlencode js_code@js/coffee/app.js http://closure-compiler.appspot.com/compile > js/coffee/app.min.js 2> /dev/null
+	#curl -d output_format=text -d output_info=compiled_code -d compilation_level=SIMPLE_OPTIMIZATIONS --data-urlencode js_code@js/coffee/app.js http://closure-compiler.appspot.com/compile > js/coffee/app.min.js 2> /dev/null
+	java -jar compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js js/coffee/app.js > js/coffee/app.min.js
 	@echo "Done."
 
 ###
