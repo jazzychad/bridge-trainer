@@ -4,7 +4,7 @@ Array::remove = (e) ->
   return @[t..t] = [] if (t = @indexOf(e)) > -1
   true
 
-class @Card
+class Card
   suits = ["Spades", "Hearts", "Diamonds", "Clubs"]
   suitsShort = ["S", "H", "D", "C"]
   ranks = ["2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace"].reverse()
@@ -35,7 +35,7 @@ class @Card
   toString: ->
     "c" + @cardNameShort()
 
-class @DeckUtil
+class DeckUtil
   constructor: ->
 
   @printCards = (cards) ->
@@ -70,7 +70,7 @@ class @DeckUtil
       ret += hand.origClubs.slice().sort((c1,c2) -> c1.id - c2.id).map((c) -> c.rankShort).join(" ") + sep
     ret
 
-class @Deck
+class Deck
   constructor: ->
     @reset()
 
@@ -112,7 +112,7 @@ class @Deck
     card = @cards.pop()
     @deal card
 
-class @Hand
+class Hand
   constructor: ->
     @cards = []
     @spades = []
@@ -175,7 +175,7 @@ class @Hand
   numDoubletons: ->
     @shape().filter((c) -> c == 2).length
 
-class @CardPlayer
+class CardPlayer
   constructor: ->
     @hand = new Hand
     @partner = null
@@ -199,7 +199,7 @@ class @CardPlayer
     else
       @discards.push cards
 
-class @CardTable
+class CardTable
   constructor: (@num_players=4) ->
     @deck = new Deck()
     @currentTrick = []
@@ -226,7 +226,7 @@ class @CardTable
 
 # Bidding stuff
 
-class @BasicOpeningBidStrategy
+class BasicOpeningBidStrategy
   constructor: ->
     @weak2BidsEnabled = false
     @minimum1BidHCP = 12
@@ -248,7 +248,7 @@ class @BasicOpeningBidStrategy
     # TODO handle other 1 level bids
     [new Bid("PASS")]
 
-class @BasicBiddingStrategy
+class BasicBiddingStrategy
   constructor: ->
     @jacobyTransfers = false
     @staymanConvention = false
@@ -257,5 +257,5 @@ class @BasicBiddingStrategy
     @openingRebidStrategy = null;
 
 
-class @Bid
+class Bid
   constructor: (@bid) ->

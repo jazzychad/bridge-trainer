@@ -1,6 +1,6 @@
 table = null
 hand = null
-biddingStrategy = new @BasicBiddingStrategy()
+biddingStrategy = new BasicBiddingStrategy()
 $ = @$
 bb = new @BankersBox(1)
 tappable = @tappable
@@ -11,13 +11,13 @@ _log = (msg) ->
 
 doit = ->
   hcp = 0
-  table = new @CardTable()
+  table = new CardTable()
   table.deck.shuffle()
   table.dealHand 13
   hand = table.south.hand
   hcp = hand.hcp()
 
-  $("#hand").html(@DeckUtil.printBridgeHand(hand))
+  $("#hand").html(DeckUtil.printBridgeHand(hand))
 
 $(document).ready ->
   doit()

@@ -1,24 +1,38 @@
-all: bootstrap bankersbox cards appjs
+all: bootstrap bankersbox combinedjs
 
-site: all cardsmin appjsmin
+site: all
 	rm -rf _site
 	mkdir -p _site/{css,js,img}
 	cp html/index.html _site
-	cp js/coffee/cards.js _site/js
-	cp js/coffee/cards.min.js _site/js
-	cp js/coffee/app.js _site/js
-	cp js/coffee/app.min.js _site/js
+	cp js/coffee/combined.js _site/js/application.js
 	cp css/bootstrap/bootstrap/img/{glyphicons-halflings.png,glyphicons-halflings-white.png} _site/img
 	cp css/bootstrap/bootstrap/js/bootstrap.min.js _site/js
 	cp css/bootstrap/bootstrap/css/{bootstrap.css,bootstrap-responsive.css,bootstrap.min.css,bootstrap-responsive.min.css} _site/css
 	cp js/Bankersbox/bankersbox.min.js _site/js
 	cp js/tappable/source/tappable.js _site/js
 
+sitemin: site combinedjsmin
+	cp js/coffee/combined.min.js _site/js/application.js
+
 clean:
 	rm -rf _site
 	rm -f js/coffee/*.js
 	pushd css/bootstrap && make clean && popd
 	pushd js/BankersBox && make clean && popd
+
+###
+### Combined JS assets
+###
+
+combinedjs: js/coffee/combined.js
+
+js/coffee/combined.js: js/coffee/cards.coffee js/coffee/app.coffee
+	coffee -j -c -p js/coffee/cards.coffee js/coffee/app.coffee > js/coffee/combined.js
+
+combinedjsmin: js/coffee/combined.min.js
+
+js/coffee/combined.min.js: js/coffee/combined.js
+	java -jar compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js js/coffee/combined.js > js/coffee/combined.min.js
 
 ###
 ### Cards dependencies
@@ -68,8 +82,8 @@ bankersbox:
 ### Deploy
 ###
 
-deploy: site
+deploy: sitemin
 	pushd _site && s3cmd sync . ${BRIDGE_S3_BUCKET} && popd
 
 
-.PHONY: all clean deploy bootstrap bankersbox cards cardsmin site
+.PHONY: all clean deploy bootstrap bankersbox cards cardsmin combinedjs combinedjsmin site sitemin
