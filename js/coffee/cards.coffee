@@ -232,18 +232,41 @@ class BasicOpeningBidStrategy
     @minimum1BidHCP = 12
 
   openingBid: (hand) ->
-    if hand.hcp() < @minimum1BidHCP
+    hcp = hand.hcp()
+    if hcp < @minimum1BidHCP
       if not @weak2BidsEnabled
         return [new Bid("PASS")]
       else
         # TODO: handle weak 2 bids, for now pass
         return [new Bid("PASS")]
 
-    if 15 <= hand.hcp() <= 17 && hand.isBalanced()
+    if 15 <= hcp <= 17 && hand.isBalanced()
       return [new Bid("1NT")]
 
-    if hand.hcp() >= 21
+    if hcp >= 21
       return [new Bid("2C")]
+
+    if hcp >= @minimum1BidHCP
+      # check majors first
+      if hand.spades.length >= 5 || hand.hearts.length >= 5
+        if hand.hearts.length > hand.spades.length
+          return [new Bid("1H")]
+        else
+          return [new Bid("1S")]
+      else
+        # minor suit
+        if hand.clubs.length >= 3 || hand.diamonds.length >= 3
+          if hand.diamonds.length > hand.clubs.length
+            return [new Bid("1D")]
+          else if hand.clubs.length > hand.diamonds.length
+            return [new Bid("1C")]
+          else
+            # clubs == diamonds
+            # 3 = clubs, 4+ = diamonds
+            if hand.clubs.length == 3
+              return [new Bid("1C")]
+            else if hand.clubs.length >= 4
+              return [new Bid("1D")]
 
     # TODO handle other 1 level bids
     [new Bid("PASS")]

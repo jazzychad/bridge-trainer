@@ -29,12 +29,13 @@ $(document).ready ->
       _log 'correct'
       $("#alert").addClass('alert-success').text('Correct')
       updateStats true
+      doit()
     else
       _log 'incorrect'
       $("#alert").removeClass('alert-success').text('Wrong')
       updateStats false
     _log 'tap ' + $(target).attr('data-bid')
-    doit()
+    displayStats()
 
 updateStats = (correct) ->
   bb.incr 'total_attempts'
@@ -49,6 +50,9 @@ resetStats = ->
   bb.del 'correct_attempts'
   bb.del 'last50_attempts'
   bb.del 'last50_correct'
+
+displayStats = ->
+  $("#alert").text('(' + bb.get('correct_attempts') + '/' + bb.get('total_attempts') + ') | (' + bb.get('last50_correct') + '/' + bb.lrange('last50_attempts', 0, -1).length + ')')
 
 @window.addEventListener("load", ->
   setTimeout(( ->
