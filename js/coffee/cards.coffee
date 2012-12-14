@@ -70,6 +70,10 @@ class DeckUtil
       ret += hand.origClubs.slice().sort((c1,c2) -> c1.id - c2.id).map((c) -> c.rankShort).join(" ") + sep
     ret
 
+  @canOpenBidding = (hand, biddingStrategy) ->
+    bids = biddingStrategy.openingBidStrategy.openingBid(hand)
+    return true unless bids.length == 1 && bids[0].bid == "PASS"
+
 class Deck
   constructor: ->
     @reset()
@@ -112,18 +116,48 @@ class Deck
     card = @cards.pop()
     @deal card
 
+class HandSuit
+  constructor: (@suit) ->
+    self = this
+    suitShorts =
+      "Spades" : "S"
+      "Hearts" : "H"
+      "Diamonds" : "D"
+      "Clubs" : "C"
+    @suitShort = suitShorts[@suit]
+    @cards = []
+    @length = 0
+
+  push: ->
+    @cards.push.apply(@cards, arguments)
+    @length = @cards.length
+
+  pop: ->
+    card = @cards.pop.apply(@cards, arguments)
+    @length = @cards.length
+    card
+
+  slice: ->
+    @cards.slice.apply(@cards, arguments)
+
+  honors: ->
+    @cards.filter((v) -> v.rankShort in ["A","K","Q","J","10"])
+
+
 class Hand
   constructor: ->
     @cards = []
-    @spades = []
-    @hearts = []
-    @diamonds = []
-    @clubs = []
+    @spades = new HandSuit("Spades")
+    @hearts = new HandSuit("Hearts")
+    @diamonds = new HandSuit("Diamonds")
+    @clubs = new HandSuit("Clubs")
+    @handSuits = [@spades, @hearts, @diamonds, @clubs]
     @origCards = []
-    @origSpades = []
-    @origHearts = []
-    @origDiamonds = []
-    @origClubs = []
+    @origSpades = new HandSuit("Spades")
+    @origHearts = new HandSuit("Hearts")
+    @origDiamonds = new HandSuit("Diamonds")
+    @origClubs = new HandSuit("Clubs")
+    @origHandSuits = [@origSpades, @origHearts, @origDiamonds, @origClubs]
 
   addCard: (card) ->
     @cards.push card
@@ -174,6 +208,19 @@ class Hand
 
   numDoubletons: ->
     @shape().filter((c) -> c == 2).length
+
+#   findHonors = (arr) ->
+#     arr.filter((v) -> v.rankShort in ["A","K","Q","J","10"])
+
+#   honors: -> findHonors @origCards
+
+#   spadeHonors: -> findHonors @origSpades
+
+#   heartHonors: -> findHonors @origHearts
+
+#   diamondHonors: -> findHonors @origDiamonds
+
+#   clubHonors: -> findHonors @origClubs
 
 class CardPlayer
   constructor: ->
@@ -228,20 +275,31 @@ class CardTable
 
 class BasicOpeningBidStrategy
   constructor: ->
-    @weak2BidsEnabled = false
+    @preemptiveBidsEnabled = false
     @minimum1BidHCP = 12
 
   openingBid: (hand) ->
     hcp = hand.hcp()
     if hcp < @minimum1BidHCP
-      if not @weak2BidsEnabled
+      if not @preemptiveBidsEnabled
         return [new Bid("PASS")]
       else
-        # TODO: handle weak 2 bids, for now pass
-        return [new Bid("PASS")]
+        # TODO: handle weak bids, for now pass
+        if 5 <= hcp <= 10
+          for handSuit in hand.handSuits
+            if handSuit.length >= 6 && handSuit.honors().length >= 2
+              suitShort = handSuit.suitShort
+              level = handSuit.length - 4
+              bidString = "" + level + suitShort
+              if bidStirng == "2C"
+                return new [Bid("PASS")]
+              return [new Bid(bidString)]
 
     if 15 <= hcp <= 17 && hand.isBalanced()
       return [new Bid("1NT")]
+
+    if hcp == 20 && hand.isBalanced()
+      return [new Bid("2NT")]
 
     if hcp >= 21
       return [new Bid("2C")]

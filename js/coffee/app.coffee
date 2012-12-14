@@ -10,13 +10,15 @@ _log = (msg) ->
     @console.log(msg)
 
 doit = ->
+  _log('doit')
   hcp = 0
   table = new CardTable()
   table.deck.shuffle()
   table.dealHand 13
   hand = table.south.hand
   hcp = hand.hcp()
-
+  @table = table
+  doit() if (!DeckUtil.canOpenBidding hand, biddingStrategy)
   $("#hand").html(DeckUtil.printBridgeHand(hand))
 
 $(document).ready ->
@@ -58,3 +60,5 @@ displayStats = ->
   setTimeout(( ->
     @window.scrollTo 0, 1),
     0))
+
+@doit = doit
